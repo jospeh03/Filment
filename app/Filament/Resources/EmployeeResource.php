@@ -10,12 +10,17 @@ use Filament\Forms\Set;
 use App\Models\Employee;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
 use App\Filament\Resources\EmployeeResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\EmployeeResource\RelationManagers;
+use Filament\Tables\Filters\SelectFilter;
 
 class EmployeeResource extends Resource
 {
@@ -135,36 +140,35 @@ class EmployeeResource extends Resource
                 ->label('Country')
                 ->searchable()
                 ->sortable(),
-
             Tables\Columns\TextColumn::make('state.name')
                 ->label('State')
                 ->searchable()
-                ->sortable(),
+                ->sortable()->toggleable(isToggledHiddenByDefault:true),
 
             Tables\Columns\TextColumn::make('city.name')
                 ->label('City')
                 ->searchable()
-                ->sortable(),
+                ->sortable()->toggleable(isToggledHiddenByDefault:true),
 
             Tables\Columns\TextColumn::make('department.name')
                 ->label('Department')
                 ->searchable()
-                ->sortable(),
+                ->sortable()->toggleable(isToggledHiddenByDefault:true),
 
-            Tables\Columns\TextColumn::make('first_name')->label('First Name')->searchable(),
-            Tables\Columns\TextColumn::make('middle_name')->label('Middle Name')->searchable(),
+            Tables\Columns\TextColumn::make('first_name')->label('First Name')->searchable()->sortable(),
+            Tables\Columns\TextColumn::make('middle_name')->label('Middle Name')->searchable()->toggleable(isToggledHiddenByDefault:true),
             Tables\Columns\TextColumn::make('last_name')->label('Last Name')->searchable(),
-            Tables\Columns\TextColumn::make('address')->label('Address')->searchable(),
+            Tables\Columns\TextColumn::make('address')->label('Address')->searchable()->toggleable(isToggledHiddenByDefault:true),
             Tables\Columns\TextColumn::make('zip_code')->label('ZIP Code')->searchable(),
 
-            Tables\Columns\TextColumn::make('date_of_birth')->label('Date of Birth')->date()->sortable(),
+            Tables\Columns\TextColumn::make('date_of_birth')->label('Date of Birth')->date()->sortable()->toggleable(isToggledHiddenByDefault:true),
             Tables\Columns\TextColumn::make('date_hire')->label('Date Hired')->date()->sortable(),
 
             Tables\Columns\TextColumn::make('created_at')->label('Created At')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
             Tables\Columns\TextColumn::make('updated_at')->label('Updated At')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
         ])
         ->filters([
-            //
+            SelectFilter::make('Department')->relationship('department','name')->searchable()->preload()->label('Filter By Department')->indicator('department')
         ])
         ->actions([
             Tables\Actions\ViewAction::make(),
@@ -176,6 +180,33 @@ class EmployeeResource extends Resource
             ]),
         ]);
     }
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+        ->schema([
+            Section::make('Relationships ')
+            ->schema([
+                TextEntry::make('country.name'),
+                TextEntry::make('state.name'),
+                TextEntry::make('city.name'),
+                TextEntry::make('department.name'),
+            ])->columns(2),
+            Section::make('Name')
+            ->schema([
+                TextEntry::make('first_name'),
+                TextEntry::make('middle_name'),
+                TextEntry::make('last_name'),
+            ])->columns(3),
+            Section::make('Address')
+            ->schema([
+                TextEntry::make('address'),
+                TextEntry::make('zip_code'),
+            ])->columns(2),
+            
+            
+            ]);
+    }
+
 
     public static function getRelations(): array
     {
@@ -189,7 +220,7 @@ class EmployeeResource extends Resource
         return [
             'index' => Pages\ListEmployees::route('/'),
             'create' => Pages\CreateEmployee::route('/create'),
-            'view' => Pages\ViewEmployee::route('/{record}'),
+            // 'view' => Pages\ViewEmployee::route('/{record}'),
             'edit' => Pages\EditEmployee::route('/{record}/edit'),
         ];
     }
