@@ -2,8 +2,11 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\CountryResource\RelationManagers\EmployeesRelationManager;
 use App\Filament\Resources\StateResource\Pages;
 use App\Filament\Resources\StateResource\RelationManagers;
+use App\Filament\Resources\StateResource\RelationManagers\CitesRelationManager;
+use App\Filament\Resources\StateResource\RelationManagers\CityRelationManager;
 use App\Models\State;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -34,7 +37,7 @@ class StateResource extends Resource
         
         Forms\Components\Select::make('country_id')
             ->relationship(name:'country',titleAttribute:'name')
-            ->searchable()->multiple()
+            ->searchable()
             ->preload()
             ->required(),
         Forms\Components\TextInput::make('name')
@@ -81,7 +84,8 @@ class StateResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            CitesRelationManager::class,
+            EmployeesRelationManager::class
         ];
     }
     public static function infolist(Infolist $infolist): Infolist

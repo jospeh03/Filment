@@ -324,6 +324,8 @@ namespace App\Models {
      * @property int $id
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\State> $states
      * @property-read int|null $states_count
+     * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Employee> $employees
+     * @property-read int|null $employees_count
      * @method static \Illuminate\Database\Eloquent\Builder<Country>|Country whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Country>|Country whereName($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Country>|Country whereCode($value)
@@ -1582,6 +1584,8 @@ namespace App\Models {
      * @property-read \App\Models\Country $country
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\City> $cities
      * @property-read int|null $cities_count
+     * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Employee> $employees
+     * @property-read int|null $employees_count
      * @method static \Illuminate\Database\Eloquent\Builder<State>|State whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<State>|State whereCountryId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<State>|State whereName($value)
